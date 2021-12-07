@@ -9,10 +9,17 @@ public class Main {
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(9876);
+
             System.out.println("Waiting for connection...");
             // Wait for connection - BLOCKING
+            // Lägg raden nedan i en loop
             Socket clientSocket = serverSocket.accept();
-            // Go a connection
+            // starta en thread för denna klient
+            // när vi skapar tråden behöver vi skicka över clientSocket
+
+            // Allt nedanför skall göras i tråden
+
+            // Got a connection
             System.out.println("Got connection from " + clientSocket.getInetAddress());
             BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -27,8 +34,9 @@ public class Main {
                 // Send message to client
                 output.println("You said: " + message);
             }
+
         } catch (IOException e) {
-            System.out.println("Lost connection with client");
+            e.printStackTrace();
         }
     }
 }
