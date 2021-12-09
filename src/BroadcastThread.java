@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class BroadcastThread extends Thread{
     Server server;
 
@@ -10,13 +14,17 @@ public class BroadcastThread extends Thread{
         try {
             while (true) {
                 Message message = server.getBroadcastQueue().take();
-                // TODO: Loopa igen alla klienter som är uppkopplade
-                    // TODO: Om den aktuella socketen inte är avsändar socketen
-                        // TODO: Skicka textmeddelandet till den aktuella socketen
+                for(var clientSocket : server.getClientSockets()) {
+                    if(clientSocket != message.getSenderSocket()) {
+                        PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+                        output.println(message.getMessage());
+                    }
+                }
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
 
     }
 }
+

@@ -19,7 +19,6 @@ public class ClientThread extends Thread {
             // Got a connection
             System.out.println("Got connection from " + clientSocket.getInetAddress());
             BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
             while (true) {
                 // Wait for message from client - BLOCKING
                 String msg = input.readLine();
@@ -30,14 +29,10 @@ public class ClientThread extends Thread {
                 if (msg.equals("exit")) {
                     break;
                 }
-                // Send message to client
-                //output.println("You said: " + message);
             }
-        } catch (
-                IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Client left the chat");
+            server.getClientSockets().remove(clientSocket);
         }
 
     }
